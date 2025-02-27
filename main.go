@@ -1,15 +1,34 @@
 package main
 
 import (
+	"bufio"
+	"cmp"
 	"fmt"
 	"os"
-	"bufio"
-	"strings"
+	"slices"
 	"strconv"
+	"strings"
+)
+
+// Global Variables
+var (
+	// List of colours to be used for the graph
+	colours = []string{
+        "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", 
+        "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
+	}
+
+	// Adjacency list for the graph
+	adjList = make(map[int][]int)
 )
 
 func main() {
 
+}
+
+func colourGraph(adjList map[int][]int) (map[int]int) {
+	
+	return nil
 }
 
 /* 
@@ -28,9 +47,6 @@ Returns:
 	4: [1, 2]
 */
 func parseInput(file *os.File) (map[int][]int) {
-	// The map that will hold the adjacency list
-	adjList := make(map[int][]int)
-
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		line := strings.Split(scanner.Text(), ",")		   // Get the current line
@@ -64,4 +80,21 @@ func openFile(path string) (*os.File) {
 	}
 
 	return file
+}
+
+func sortNodes() ([]int) {
+	sortedKeys := make([]int, 0, len(adjList))
+	for k, _ := range adjList {
+		sortedKeys = append(sortedKeys, k)
+	}
+
+	slices.SortFunc(sortedKeys,
+		func(a, b int) int {
+			if len(adjList[a]) == len(adjList[b]) {
+				return cmp.Compare(a, b)
+			}
+			return -cmp.Compare(len(adjList[a]), len(adjList[b]))
+		})
+
+	return sortedKeys
 }
