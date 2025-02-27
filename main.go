@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-// Global Variables
+/* Global Variables */
 var (
 	// List of colours to be used for the graph
 	colours = []string{
@@ -23,12 +23,87 @@ var (
 )
 
 func main() {
+	// Check if the correct number of arguments have been provided
+	if len(os.Args) != 3 {
+		fmt.Println("Usage: go run main.go <input_file> <output_file>")
+		os.Exit(1)
+	}
 
+	// Open the input file
+	file := openFile(os.Args[1])
+
+	// Parse the input file and create the adjacency list
+	parseInput(file)
+
+	// Sort the nodes in the adjacency list by the number of connections
+	sortedKeys := sortNodes()
+
+	// Colour the graph
+	colourMap := colourGraph(sortedKeys)
+
+	// Output the colours assigned to each node
+	outputColours(colourMap, os.Args[2])
 }
 
-func colourGraph(adjList map[int][]int) (map[int]int) {
+/*
+Output the coours assigned to each node accordingly
+ */
+func outputColours(colourMap map[int]string, output string) {
 	
-	return nil
+	file, err := os.Create(output)
+	if err != nil {
+		fmt.Println("Error creating output file: ", err)
+		os.Exit(1)
+	}
+
+	// Write the colours to the output file
+
+	for i := range len(colourMap) {
+		_, err := file.WriteString(strconv.Itoa(i + 1) + colourMap[i + 1] + "\n")
+		if err != nil {
+			fmt.Println("Error writing to output file: ", err)
+		}
+	}
+
+	defer file.Close()
+}
+
+/* 
+Function to run the graph colouring algorithm:
+	1. Assume an ordered list of colours (eg, red, black, blue, etc, here denoted by A, B, C, …)
+	2. Assume an interference graph, where nodes are numbered: 1, 2, 3, …
+	3. Rank nodes (that is, live ranges) of the interference graph according to the number of 
+	   neighbours in descending order. In case of a tie (that is, nodes with the same number of neighbours) the node with the lowest id takes priority.
+	4. Follow the ranking to assign colours from the list of colours. For each node, select the first colour from the list that is not used by the node’s neighbours.
+	5. Keep following the ranking and repeating step 4 until all nodes are coloured.
+*/
+func colourGraph(sortedKeys []int) (map[int]string) {
+	// Create a map to hold the colours assigned to each node
+	// Node Number --> Colour
+	colourMap := make(map[int]string)
+
+	for _, node := range sortedKeys {
+		neighbours := adjList[node]
+		neighbourColours := make(map[string]bool)
+
+		// Get the colours of the neighbours
+		for _, neighbour := range neighbours {
+			colour := colourMap[neighbour]
+			if colour != "" {
+				neighbourColours[colour] = true
+			}
+		}
+
+		// Assign the first available colour to the node
+		for _, colour := range colours {
+			if !neighbourColours[colour] {
+				colourMap[node] = colour
+				break
+			}
+		}
+	}
+
+	return colourMap
 }
 
 /* 
@@ -70,7 +145,7 @@ func parseInput(file *os.File) (map[int][]int) {
 	return adjList
 }
 
-// Open a file, return a pointer to it and exit gracefully if there is an error
+/* Open a file, return a pointer to it and exit gracefully if there is an error */
 func openFile(path string) (*os.File) {
 	file, err := os.Open(path)
 
@@ -82,6 +157,11 @@ func openFile(path string) (*os.File) {
 	return file
 }
 
+/* 
+Sort the nodes in the adjacency list by the number of connections
+If two nodes have the same number of connections, sort them by node number with the smaller node number first
+Returns a slice of the sorted node numbers
+*/
 func sortNodes() ([]int) {
 	sortedKeys := make([]int, 0, len(adjList))
 	for k, _ := range adjList {
