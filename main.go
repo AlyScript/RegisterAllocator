@@ -45,9 +45,7 @@ func main() {
 	outputColours(colourMap, os.Args[2])
 }
 
-/*
-Output the coours assigned to each node accordingly
- */
+/* Output the coours assigned to each node accordingly */
 func outputColours(colourMap map[int]string, output string) {
 	
 	file, err := os.Create(output)
@@ -124,15 +122,15 @@ Returns:
 func parseInput(file *os.File) (map[int][]int) {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		line := strings.Split(scanner.Text(), ",")		   // Get the current line
-		node, err := strconv.Atoi(line[0])									   // Get the node number
+		line := strings.Split(scanner.Text(), ",")		   		// Get the current line
+		node, err := strconv.Atoi(line[0])						// Get the node number
 		if err != nil {
 			fmt.Println("Error parsing first node: ", err)
 		}
 		
-		connections := make([]int, len(line[1:]))						   // Create a slice to hold the connections
+		connections := make([]int, len(line[1:]))				// Create a slice to hold the connections
 		for i, conn := range line[1:] {
-			connections[i], err = strconv.Atoi(conn)					   // Convert the connections to integers
+			connections[i], err = strconv.Atoi(conn)			// Convert the connections to integers
 			if err != nil {
 				fmt.Println("Error parsing connections: ", err)
 			}
