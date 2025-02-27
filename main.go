@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"bufio"
+	"strings"
+	"strconv"
 )
 
 func main() {
@@ -25,14 +27,31 @@ Returns:
 	3: [1]
 	4: [1, 2]
 */
-func parseInput(file *os.File) {
+func parseInput(file *os.File) (map[int][]int) {
+	// The map that will hold the adjacency list
+	adjList := make(map[int][]int)
+
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		line := scanner.Text()
-		fmt.Println(line)
+		line := strings.Split(scanner.Text(), ",")		   // Get the current line
+		node, err := strconv.Atoi(line[0])									   // Get the node number
+		if err != nil {
+			fmt.Println("Error parsing first node: ", err)
+		}
+		
+		connections := make([]int, len(line[1:]))						   // Create a slice to hold the connections
+		for i, conn := range line[1:] {
+			connections[i], err = strconv.Atoi(conn)					   // Convert the connections to integers
+			if err != nil {
+				fmt.Println("Error parsing connections: ", err)
+			}
+		}
+		
+		adjList[node] = connections
 	}
 
 	defer file.Close()
+	return adjList
 }
 
 // Open a file, return a pointer to it and exit gracefully if there is an error
