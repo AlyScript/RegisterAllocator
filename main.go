@@ -45,7 +45,7 @@ func main() {
 	outputColours(colourMap, os.Args[2])
 }
 
-/* Output the coours assigned to each node accordingly */
+/* Output the colours assigned to each node accordingly */
 func outputColours(colourMap map[int]string, output string) {
 	
 	file, err := os.Create(output)
@@ -63,6 +63,7 @@ func outputColours(colourMap map[int]string, output string) {
 		}
 	}
 
+	// Close output file once done
 	defer file.Close()
 }
 
@@ -74,6 +75,11 @@ Function to run the graph colouring algorithm:
 	   neighbours in descending order. In case of a tie (that is, nodes with the same number of neighbours) the node with the lowest id takes priority.
 	4. Follow the ranking to assign colours from the list of colours. For each node, select the first colour from the list that is not used by the node’s neighbours.
 	5. Keep following the ranking and repeating step 4 until all nodes are coloured.
+
+Parameters:
+	sortedKeys: A slice (list) of the node numbers sorted by the number of connections
+Returns: 
+	A map of node numbers to the colour assigned to each node
 */
 func colourGraph(sortedKeys []int) (map[int]string) {
 	// Create a map to hold the colours assigned to each node
