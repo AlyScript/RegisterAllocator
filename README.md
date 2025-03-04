@@ -12,3 +12,5 @@ and then run with
 ```bash
 ./main
 ```
+
+The `check_result.sh` script will run `main.go` and check if `output.txt` is equal to `expected.txt`. If any files are missing then it will simply output "test failed".
