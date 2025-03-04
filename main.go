@@ -129,6 +129,10 @@ func parseInput(file *os.File) (map[int][]int) {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		line := strings.Split(scanner.Text(), ",")		   		// Get the current line
+		if len(line) < 1 {
+			fmt.Println("Error: Invalid input file format")		// We should never get here but just in case
+			os.Exit(1)
+		}
 		node, err := strconv.Atoi(line[0])						// Get the node number
 		if err != nil {
 			fmt.Println("Error parsing first node: ", err)
