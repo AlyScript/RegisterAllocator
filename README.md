@@ -1,3 +1,5 @@
+This is a simple [register allocator](https://en.wikipedia.org/wiki/Register_allocation).
+
 ### Usage
 **To run**
 ```bash
