@@ -9,5 +9,5 @@ if [ -f output.txt ] && [ -f expected.txt ]; then
         echo "Test failed"
     fi
 else
-    echo "Missing output file or expected output file"
+    echo "Missing input file or expected output file"
 fi
